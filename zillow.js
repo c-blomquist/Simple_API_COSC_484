@@ -10,11 +10,12 @@ var database = [ { price: 240000, city: "baltimore" },
     { price: 550000, city: "seattle" }, 
     { price: 250000, city: "boston" } ];
 
+// checking that the correct number of arguments were passed into the command line to start the API
 if(process.argv.length < 3){
     console.log("Please enter the command with a port option");
 }
 else if(process.argv.length > 3) {
-    console.log("Please enter only the port number as extra.");
+    console.log("Please enter only the port number as extra parameter.");
 }
 else {
     var port = process.argv[2];
@@ -22,7 +23,7 @@ else {
     console.log("Please navigate to localhost:" + port);
 }
 
-
+// Ouput message on how to use the API
 app.get('/', function(req, res){
     res.write("Welcome to the zestimate API. Here are the endpoint options available to you: \n");
     res.write("/v1/zillow/zestimate needs 3 inputs of sqft, bed, and bath to calculate the zestimate.\n");
@@ -31,7 +32,7 @@ app.get('/', function(req, res){
     res.end();
 })
 
-// endpoint: /v1/zillow/zestimate needs 3 inputs to calculate the zestimate.
+// endpoint: /v1/zillow/zestimate needs 3 inputs of sqft, bed, and bath to calculate the zestimate.
 app.get('/v1/zillow/zestimate', function(req, res){
     if(!req.query.sqft || !req.query.bed || !req.query.bath){
         res.status(404).send("Arguments missing for this endpoint");
@@ -42,7 +43,7 @@ app.get('/v1/zillow/zestimate', function(req, res){
     res.status(200).send(zestimate);
 });
 
-// /v1/zillow/houses has 1 optional parameter city
+// /v1/zillow/houses has 1 optional parameter city returns empty if no parameter
 app.get('/v1/zillow/houses', function(req, res){
     var filteredHouses = [];
     if(!req.query.city){
@@ -53,7 +54,7 @@ app.get('/v1/zillow/houses', function(req, res){
     res.status(200).send(filteredHouses);
 });
 
-// /v1/zillow/prices needs 1 parameter usd
+// /v1/zillow/prices needs 1 parameter usd to filter list
 app.get('/v1/zillow/prices', function(req, res){
     if(!req.query.usd){
         res.status(404).send("Missing usd argument for this endpoint.")
